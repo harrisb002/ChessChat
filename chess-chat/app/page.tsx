@@ -1,8 +1,12 @@
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
-    <p className="text-3xl font-bold text-indigo-800">
-      Hello chess Lovers!
+    <div>
+      <p className="text-3xl font-bold text-indigo-800">
+        Hello chess Lovers!
       </p>
-
-      )
+      <Button>Click me!</Button>
+    </div>
+  )
 }
