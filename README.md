@@ -19,3 +19,18 @@ This app will enable the below functionality for users of the SSUChess app
 - Loading for messages in batches of 10 using [tanstack](https://tanstack.com/query/latest)
 - ORM (Object-Realtional Model) using (Prisma)[https://www.prisma.io/]
 - MySQL database using (Planetscale)[https://planetscale.com/]
+
+
+### Scripts
+- Run the development server: `npm run dev`
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Other Docs
+
+- [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - Interactive Next.js tutorial.
+-  Deploy Next.js app using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) 
+- [shadcn UI](https://ui.shadcn.com/docs/installation/next)
+
+
