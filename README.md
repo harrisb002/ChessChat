@@ -39,3 +39,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - `npx prisma init`
   - `npx prisma generate` : To update schema in node modules upon each change
   - `npx prisma db push` : Create the collections in the database (supabase for me)
+  - `npx prisma studio` : Loads the prisma studio 
