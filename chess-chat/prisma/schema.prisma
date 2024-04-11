@@ -20,7 +20,7 @@ model Profile {
   imageUrl String @db.Text
   email String @db.Text
 
-  servers Server[]
+  clubss Club[]
   members Member[]
   channels Channel[]
 
@@ -41,18 +41,18 @@ model Member {
   profileId String
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  serverId String
-  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  clubsId String
+  clubs Club @relation(fields: [clubsId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([serverId])
+  @@index([clubsId])
 }
 
 
-model Server {
+model Club {
   id String @id @default(uuid())
   name String
   imageUrl String @db.Text
@@ -81,12 +81,12 @@ model Channel {
   type ChannelType @default(TEXT)
   profileId String
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  serverId String
-  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  clubsId String
+  clubs Club @relation(fields: [clubsId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([serverId])
+  @@index([clubsId])
 }

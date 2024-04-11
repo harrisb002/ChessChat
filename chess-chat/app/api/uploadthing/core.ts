@@ -10,7 +10,7 @@ const handleAuth = () => {
 };
 
 export const ourFileRouter = {
-  serverImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+  clubImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
   messageFile: f(["image", "pdf"]) // Can uplaod much more!

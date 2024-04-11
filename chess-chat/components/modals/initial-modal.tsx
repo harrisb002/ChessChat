@@ -58,7 +58,7 @@ export const InitialModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-     await axios.post("/api/servers", values);
+     await axios.post("/api/clubs", values);
      form.reset();
      router.refresh();
       window.location.reload();
@@ -95,7 +95,7 @@ export const InitialModal = () => {
                     <FormItem>
                       <FormControl>
                         <FileUpload
-                          endpoint="serverImage"
+                          endpoint="clubImage"
                           value={field.value}
                           onChange={field.onChange}
                         />
@@ -110,7 +110,7 @@ export const InitialModal = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                      Server Name
+                      Club Name
                     </FormLabel>
                     <FormControl>
                       <Input

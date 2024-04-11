@@ -13,8 +13,8 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    // Create the new server
-    const server = await db.server.create({
+    // Create the new club
+    const club = await db.club.create({
       data: {
         profileId: profile.id,
         name,
@@ -28,9 +28,9 @@ export async function POST(req: Request) {
         },
       },
     });
-    return NextResponse.json(server);
+    return NextResponse.json(club);
   } catch (error) {
-    console.log("[SERVERS_POST]", error);
+    console.log("[CLUBS_POST]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -6,8 +6,8 @@ import { InitialModal } from "@/components/modals/initial-modal";
 const SetupPage = async () => {
   const profile = await initialProfile();
 
-  // Attempt to find any server that the profile is a member of
-  const server = await db.server.findFirst({
+  // Attempt to find any club that the profile is a member of
+  const club = await db.club.findFirst({
     where: {
       members: {
         some: {
@@ -17,9 +17,9 @@ const SetupPage = async () => {
     },
   });
 
-  // Redirect them to the server they are part of
-  if (server) {
-    return redirect(`/servers/${server.id}`);
+  // Redirect them to the club they are part of
+  if (club) {
+    return redirect(`/clubs/${club.id}`);
   }
 
   // If not use a modal to create one
