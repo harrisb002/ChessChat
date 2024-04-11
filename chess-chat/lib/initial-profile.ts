@@ -1,9 +1,7 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 
-import db from '../database/config/connection';
 
-
-export const intialProfile = async () => {
+export const initialProfile = async () => {
     const user = await currentUser();
 
     if(!user) {
@@ -19,4 +17,7 @@ export const intialProfile = async () => {
     if(profile) {
         return profile
     }
+
+
+
 }
