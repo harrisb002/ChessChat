@@ -1,5 +1,5 @@
 const ClubPage = () => {
-    return <div>Club!</div>;
-}
- 
+  return <div> Club ID Page</div>;
+};
+
 export default ClubPage;
