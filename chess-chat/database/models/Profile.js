@@ -1,11 +1,9 @@
-import { mongoose } from "mongoose";
-import { v4 as uuidv4 } from "uuid";
-
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const uuidv4 = require('uuid');
 
 const profileSchema = new mongoose.Schema(
   {
-    _id: { type: String, default: () => uuid.v4().replace(/\-/g, "") },
+    _id: { type: String, default: () => uuidv4().replace(/\-/g, "") },
     userId: { type: String, unique: true, required: true },
     name: { type: String, required: true },
     imageUrl: { type: String, required: false },
@@ -13,7 +11,6 @@ const profileSchema = new mongoose.Schema(
 
     // Arrays of references to the clubs, members, and channels
     clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
-    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "Member" }],
     channels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Channel" }],
   },
   { timestamps: true }

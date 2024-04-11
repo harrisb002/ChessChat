@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-import { v4 as uuidv4 } from "uuid";
+const uuidv4 = require('uuid');
+
 
 const clubSchema = new mongoose.Schema({
-  _id: { type: String, default: () => uuid.v4().replace(/\-/g, '') },
+  _id: { type: String, default: () => uuidv4().replace(/\-/g, '') },
   name: { type: String, required: true },
   imageUrl: { type: String, required: false },
   inviteCode: { type: String, required: false },
@@ -14,4 +15,4 @@ const clubSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Export the model
-module.exports = mongoose.model('club', clubSchema);
+module.exports = mongoose.model('Club', clubSchema);
