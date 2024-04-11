@@ -17,10 +17,11 @@ This app will enable the below functionality for users of the SSUChess app
 - Ability to manage members in a club as Admin of club
 - Send attachments as messages using [uploadthing](https://uploadthing.com/)
 - Loading for messages in batches of 10 using [tanstack](https://tanstack.com/query/latest)
-- NOSQL database using (MongoDB)[https://www.mongodb.com/]
-
+- ORM (Object-Realtional Model) using (Prisma)[https://www.prisma.io/docs/orm/overview/databases/postgresql]
+- POSTGRES database using (supabase)[https://supabase.com/docs]
 
 ### Scripts
+
 - Run the development server: `npm run dev`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -29,7 +30,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - Interactive Next.js tutorial.
--  Deploy Next.js app using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) 
+- Deploy Next.js app using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
 - [shadcn UI](https://ui.shadcn.com/docs/installation/next)
 
+### Useful Commands
 
+- Prisma:
+  - `npx prisma init`
+  - `npx prisma generate` : To update schema in node modules upon each change
+  - `npx prisma db push` : Create the collections in the database (supabase for me)
