@@ -2,7 +2,7 @@
 
 ## Description
 
-Chess Chat is a chess app built using Next.js 13, React, Socket.io, Tailwind, Prisma, and MongoDB.
+Chess Chat is a chess app built using Next.js 13, React, Socket.io, Tailwind, Prisma, and Supabase.
 This app will enable the below functionality for users of the SSUChess app
 
 ### Features
