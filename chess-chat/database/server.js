@@ -9,7 +9,7 @@ const { ApolloServer } = require('apollo-server-express');
 const responseCachePlugin = require('apollo-server-plugin-response-cache');
 
 const port = process.env.DB_PORT;
-const connectDB = require("./config/connection");
+const connectDB = require("../lib/connection");
 
 const startServer = async () => {
   // Connect to the database

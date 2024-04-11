@@ -10,10 +10,39 @@ const {
 } = require("graphql");
 
 // Mongoose Models
-const Channel = require("../models/Channel");
 const Profile = require("../models/Profile");
+const Channel = require("../models/Channel");
 const Club = require("../models/Club");
 const Member = require("../models/Member");
+
+const ProfileType = new GraphQLObjectType({
+  name: "Profile",
+  fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    imageUrl: { type: GraphQLString },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    clubs: {
+      type: new GraphQLList(ClubType),
+      resolve(parent, args) {
+        return Club.find({ _id: { $in: parent.clubs } });
+      },
+    },
+    members: {
+      type: new GraphQLList(MemberType),
+      resolve(parent, args) {
+        return Member.find({ profileId: parent.id });
+      },
+    },
+    channels: {
+      type: new GraphQLList(ChannelType),
+      resolve(parent, args) {
+        return Channel.find({ profileId: parent.id });
+      },
+    },
+  }),
+});
 
 const ChannelType = new GraphQLObjectType({
   name: "Channel",
@@ -41,35 +70,6 @@ const ChannelType = new GraphQLObjectType({
       type: ClubType,
       resolve(parent, args) {
         return Club.findById(parent.clubId);
-      },
-    },
-  }),
-});
-
-const ProfileType = new GraphQLObjectType({
-  name: "Profile",
-  fields: () => ({
-    id: { type: new GraphQLNonNull(GraphQLID) },
-    userId: { type: new GraphQLNonNull(GraphQLString) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    imageUrl: { type: GraphQLString },
-    email: { type: new GraphQLNonNull(GraphQLString) },
-    clubs: {
-      type: new GraphQLList(ClubType),
-      resolve(parent, args) {
-        return Club.find({ _id: { $in: parent.clubs } });
-      },
-    },
-    members: {
-      type: new GraphQLList(MemberType),
-      resolve(parent, args) {
-        return Member.find({ profileId: parent.id });
-      },
-    },
-    channels: {
-      type: new GraphQLList(ChannelType),
-      resolve(parent, args) {
-        return Channel.find({ profileId: parent.id });
       },
     },
   }),
@@ -127,18 +127,18 @@ const MemberType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
-    channel: {
-      type: ChannelType,
-      args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return Channel.findById(args.id);
-      },
-    },
     profile: {
       type: ProfileType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Profile.findById(args.id);
+      },
+    },
+    channel: {
+      type: ChannelType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Channel.findById(args.id);
       },
     },
     club: {
@@ -158,10 +158,68 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-// Mutations will go here
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addProfile: {
+      type: ProfileType,
+      args: {
+        userId: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        imageUrl: { type: GraphQLString },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        // For clubs and channels, not allowing them to be added on creation of new Profile
+      },
+      resolve(parent, args) {
+        let profile = new Profile({
+          userId: args.userId,
+          name: args.name,
+          imageUrl: args.imageUrl,
+          email: args.email,
+        });
+        return profile.save();
+      },
+    },
+    updateProfile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        imageUrl: { type: GraphQLString },
+        email: { type: GraphQLString },
+        clubs: { type: new GraphQLList(GraphQLID) },
+        channels: { type: new GraphQLList(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Profile.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
+              imageUrl: args.imageUrl,
+              email: args.email,
+              clubs: args.clubs,
+              channels: args.channels,
+            },
+          },
+          { new: true }
+        );
+      },
+    },
+    deleteProfile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Profile.findByIdAndDelete(args.id);
+      },
+    },
+  },
+});
 
 // Export the schema
 module.exports = new GraphQLSchema({
   query: RootQuery,
-  // mutation: Mutation // Not yet implemented Mutations
+  mutation: Mutation,
 });
