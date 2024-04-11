@@ -7,6 +7,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLEnumType,
+  GraphQLInputObjectType,
 } = require("graphql");
 
 // Mongoose Models
@@ -124,6 +125,18 @@ const MemberType = new GraphQLObjectType({
   }),
 });
 
+const ProfileInputType = new GraphQLInputObjectType({
+  name: "ProfileInput",
+  fields: () => ({
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    imageUrl: { type: GraphQLString },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    clubs: { type: new GraphQLList(GraphQLID) },
+    channels: { type: new GraphQLList(GraphQLID) },
+  }),
+});
+
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
@@ -132,6 +145,12 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Profile.findById(args.id);
+      },
+    },
+    profiles: {
+      type: new GraphQLList(ProfileType),
+      resolve(parent, args) {
+        return Profile.find({});
       },
     },
     channel: {
@@ -164,18 +183,15 @@ const Mutation = new GraphQLObjectType({
     addProfile: {
       type: ProfileType,
       args: {
-        userId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        imageUrl: { type: GraphQLString },
-        email: { type: new GraphQLNonNull(GraphQLString) },
-        // For clubs and channels, not allowing them to be added on creation of new Profile
+        input: { type: new GraphQLNonNull(ProfileInputType) },
       },
       resolve(parent, args) {
         let profile = new Profile({
-          userId: args.userId,
-          name: args.name,
-          imageUrl: args.imageUrl,
-          email: args.email,
+          userId: args.input.userId,
+          name: args.input.name,
+          imageUrl: args.input.imageUrl,
+          email: args.input.email,
+          // Clubs and channels are handled in Profile model
         });
         return profile.save();
       },

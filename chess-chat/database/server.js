@@ -4,12 +4,12 @@ const cors = require("cors");
 const colors = require("colors");
 const app = express();
 const path = require("path");
-const schema = require('./schema/schema');
-const { ApolloServer } = require('apollo-server-express');
-const responseCachePlugin = require('apollo-server-plugin-response-cache');
+const schema = require("./schema/schema");
+const { ApolloServer } = require("apollo-server-express");
+const responseCachePlugin = require("apollo-server-plugin-response-cache");
 
-const port = process.env.DB_PORT;
-const connectDB = require("../lib/connection");
+const port = process.env.DB_PORT || 9000;
+const connectDB = require("./config/connection");
 
 const startServer = async () => {
   // Connect to the database
