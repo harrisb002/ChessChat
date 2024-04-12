@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, RefreshCw } from "lucide-react";
+import { Check, Copy, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { Label } from "@/components/ui/label";
@@ -14,12 +14,32 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { UseOrigin } from "@/hooks/use-origin";
+import { useState } from "react";
 
 export const InviteModal = () => {
-  const { isOpen, onClose, type } = useModal();
-  const router = useRouter();
+  const [copied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { isOpen, onClose, type, data } = useModal();
+  const origin = UseOrigin();
 
   const isModalOpen = isOpen && type === "invite";
+
+  // Extract the data from the club
+  const { club } = data;
+
+  // Create the invite URL based on origin from UseOrigin that finds window
+  const inviteUrl = `${origin}/invite/${club?.inviteCode}`;
+
+  const onCopy = () => {
+    navigator.clipboard.writeText(inviteUrl);
+    setIsCopied(true);
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1500);
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -36,10 +56,14 @@ export const InviteModal = () => {
           <div className="flex items-center mt-2 gap-x-2">
             <Input
               className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-bkack focus-visible:ring-offset-0"
-              value="invite-link"
+              value={inviteUrl}
             />
-            <Button size="icon">
-              <Copy className="w-4 h-4" />
+            <Button onClick={onCopy} size="icon">
+              {copied ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
             </Button>
           </div>
           <Button
