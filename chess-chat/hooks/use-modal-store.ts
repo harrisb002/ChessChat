@@ -5,6 +5,7 @@ export type ModalType = "createClub";
 interface ModalStore {
   type: ModalType | null;
   isOpen: boolean;
+  onClose: () => void;
   onOpen: (type: ModalType) => void;
 }
 
