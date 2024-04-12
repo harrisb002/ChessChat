@@ -59,6 +59,7 @@ export const CreateClubModal = () => {
      await axios.post("/api/clubs", values);
      form.reset();
      router.refresh();
+     onClose();
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +75,7 @@ export const CreateClubModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Customize you Club
+            Customize your Club
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
             Give your club a personality with a name and image. Can be changed
