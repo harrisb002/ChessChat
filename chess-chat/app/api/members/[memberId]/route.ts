@@ -50,14 +50,13 @@ export async function DELETE(
             }
         })
 
+        return NextResponse.json(club);
+
     } catch (error) {
         console.log("{MEMBER_ID_DELETE", error);
         return new NextResponse("Internal Error", {status: 500})
     }
-
-
 }
-
 
 export async function PATCH(
     req: Request,

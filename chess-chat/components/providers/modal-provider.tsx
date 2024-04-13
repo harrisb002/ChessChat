@@ -1,10 +1,11 @@
 "use client";
 
-import { CreateClubModal } from "@/components/modals/create-club-modal";
 import { useEffect, useState } from "react";
+import { CreateClubModal } from "@/components/modals/create-club-modal";
 import { InviteModal } from "@/components/modals/invite-modal";
 import { EditClubModal } from "@/components/modals/edit-club-modal";
 import { MembersModal } from "@/components/modals/members-modal";
+import { CreateChannelModal } from "../modals/create-channel-modal";
 
 export const ModalProvider = () => {
   // Prevent modals being rendered on serverside, gets rid of hydration errors
@@ -23,6 +24,7 @@ export const ModalProvider = () => {
       <InviteModal />
       <EditClubModal />
       <MembersModal />
+      <CreateChannelModal />
     </>
   );
 };
