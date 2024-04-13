@@ -15,7 +15,7 @@ export async function PATCH(
 ) {
   try {
     const profile = await currentProfile();
-
+    const { name, imageUrl } = await req.json();
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -31,14 +31,15 @@ export async function PATCH(
         profileId: profile.id,
       },
       data: {
-        inviteCode: uuidv4(),
+        name,
+        imageUrl,
       },
     });
+    console.log(club.id);
 
     return NextResponse.json(club);
-    
   } catch (error) {
-    console.log("[CLUB_ID", error);
+    console.log("[CLUB_ID_PATCH", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

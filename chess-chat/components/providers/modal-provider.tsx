@@ -3,6 +3,7 @@
 import { CreateClubModal } from "@/components/modals/create-club-modal";
 import { useEffect, useState } from "react";
 import { InviteModal } from "@/components/modals/invite-modal";
+import { EditClubModal } from "@/components/modals/edit-club-modal";
 
 export const ModalProvider = () => {
   // Prevent modals being rendered on serverside, gets rid of hydration errors
@@ -19,6 +20,7 @@ export const ModalProvider = () => {
     <>
       <CreateClubModal />
       <InviteModal />
+      <EditClubModal />
     </>
   );
 };
