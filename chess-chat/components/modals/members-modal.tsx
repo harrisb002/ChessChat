@@ -3,6 +3,24 @@ import { ClubWithMembersWithProfiles } from "@/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useModal } from "@/hooks/use-modal-store";
 import { UserAvatar } from "@/components/user-avatar";
+import { useState } from "react";
+import { MemberRole } from "@prisma/client";
+
+import axios from "axios";
+import qs from "query-string"
+
+import {
+  Check,
+  Gavel,
+  Loader2,
+  MoreVertical,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  ShieldQuestion
+
+} from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +40,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Check, MoreVertical, Shield, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const roleIconMap = {
   "GUEST": null,
@@ -32,14 +49,37 @@ const roleIconMap = {
 }
 
 export const MembersModal = () => {
-  const { isOpen, onClose, type, data } = useModal();
+  const { onOpen, isOpen, onClose, type, data } = useModal();
   const [loadingId, setLoadingId] = useState((""));
+  
+  const router = useRouter();
 
   const isModalOpen = isOpen && type === "members";
 
   // Extract the data from the club and members from object defined in types
   const { club } = data as { club: ClubWithMembersWithProfiles }
 
+  const onRoleChange = async (memberId: string, role: MemberRole) => {
+    try {
+      setLoadingId(memberId)
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          serverId: club?.id,
+          memberId,
+        }
+      })
+
+      const response = await axios.patch(url, { role })
+      router.refresh();
+      onOpen("members", {club: response.data}) // Update the data
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingId("");
+    }
+  }
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black overflow-hidden">
@@ -79,7 +119,7 @@ export const MembersModal = () => {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                           <DropdownMenuSubContent>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={()=> onRoleChange(member.id, "GUEST")}>
                               <Shield className="h-4 w-4 mr-2" />
                               Guest
                               {member.role === "GUEST" && (
@@ -88,12 +128,30 @@ export const MembersModal = () => {
                                 />
                               )}
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={()=> onRoleChange(member.id, "MODERATOR")}>
+                              <Shield className="h-4 w-4 mr-2" />
+                              Moderator
+                              {member.role === "MODERATOR" && (
+                                <Check
+                                  className="h-4 w-4 ml-auto"
+                                />
+                              )}
+                            </DropdownMenuItem>
                           </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
+                      <DropdownMenuSeparator>
+                        <DropdownMenuItem>
+                          <Gavel className="h-4 w-4 mr-2" />
+                          Kick
+                        </DropdownMenuItem>
+                      </DropdownMenuSeparator>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+              )}
+              {loadingId === member.id && (
+                <Loader2 className="animate-spin text-zinc-500 ml-auto w-4 h-4" />
               )}
             </div>
           ))}
