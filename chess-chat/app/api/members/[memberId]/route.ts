@@ -2,6 +2,63 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+export async function DELETE(
+    req: Request,
+    {params}:  {params: {memberId: string}}
+) {
+    try {
+        const profile = await currentProfile();
+        const { searchParams } = new URL(req.url);
+
+        const clubId = searchParams.get("clubId");
+
+        if (!profile) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+        if (!clubId) {
+            return new NextResponse("Club ID Missing", { status: 400 });
+        }
+        if (!params.memberId) {
+            return new NextResponse("Member ID Missing", { status: 400 });
+        }
+
+    // Now kick the member from the club
+        const club = await db.club.update({
+            where: {
+                id: clubId, 
+                profileId: profile.id,
+            },
+            data: {
+                members: {
+                    deleteMany: {
+                        id: params.memberId,
+                        profileId: {   // Ensure that the user cannot be deleted by themselves
+                            not: profile.id 
+                        }
+                    }
+                }
+            },
+            include: {
+                members: { // Need the data as a response to render
+                    include: {
+                        profile: true,
+                    },
+                    orderBy: {
+                        role: "asc"
+                    }
+                }
+            }
+        })
+
+    } catch (error) {
+        console.log("{MEMBER_ID_DELETE", error);
+        return new NextResponse("Internal Error", {status: 500})
+    }
+
+
+}
+
+
 export async function PATCH(
     req: Request,
     { params }: {

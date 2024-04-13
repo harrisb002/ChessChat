@@ -59,6 +59,29 @@ export const MembersModal = () => {
   // Extract the data from the club and members from object defined in types
   const { club } = data as { club: ClubWithMembersWithProfiles }
 
+  const onKick = async (memberId: string) => {
+    try {
+      setLoadingId(memberId);
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          clubId: club?.id,
+        },
+      });
+
+      const response = await axios.delete(url);
+
+      router.refresh();
+      onOpen("members", { club: response.data });
+
+    } catch (error) {
+      console.log(error)
+
+    } finally {
+      setLoadingId("");
+    }
+  }
+
   const onRoleChange = async (memberId: string, role: MemberRole) => {
     try {
       setLoadingId(memberId)
