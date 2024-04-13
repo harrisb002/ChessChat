@@ -1,7 +1,7 @@
 import { Club } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = "createClub" | "invite" | "editClub"
+export type ModalType = "createClub" | "invite" | "editClub" | "members";
 
 interface ModalData {
   club?: Club;
