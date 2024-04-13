@@ -51,7 +51,7 @@ const roleIconMap = {
 export const MembersModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
   const [loadingId, setLoadingId] = useState((""));
-  
+
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "members";
@@ -65,14 +65,13 @@ export const MembersModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/members/${memberId}`,
         query: {
-          serverId: club?.id,
-          memberId,
+          serverId: club?.id
         }
       })
 
       const response = await axios.patch(url, { role })
       router.refresh();
-      onOpen("members", {club: response.data}) // Update the data
+      onOpen("members", { club: response.data }) // Update the data
 
     } catch (error) {
       console.log(error);
@@ -119,7 +118,7 @@ export const MembersModal = () => {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                           <DropdownMenuSubContent>
-                            <DropdownMenuItem onClick={()=> onRoleChange(member.id, "GUEST")}>
+                            <DropdownMenuItem onClick={() => onRoleChange(member.id, "GUEST")}>
                               <Shield className="h-4 w-4 mr-2" />
                               Guest
                               {member.role === "GUEST" && (
@@ -128,7 +127,7 @@ export const MembersModal = () => {
                                 />
                               )}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={()=> onRoleChange(member.id, "MODERATOR")}>
+                            <DropdownMenuItem onClick={() => onRoleChange(member.id, "MODERATOR")}>
                               <Shield className="h-4 w-4 mr-2" />
                               Moderator
                               {member.role === "MODERATOR" && (
@@ -140,12 +139,10 @@ export const MembersModal = () => {
                           </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
-                      <DropdownMenuSeparator>
-                        <DropdownMenuItem>
-                          <Gavel className="h-4 w-4 mr-2" />
-                          Kick
-                        </DropdownMenuItem>
-                      </DropdownMenuSeparator>
+                      <DropdownMenuItem>
+                        <Gavel className="h-4 w-4 mr-2" />
+                        Kick
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
