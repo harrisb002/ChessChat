@@ -35,7 +35,6 @@ export async function PATCH(
         imageUrl,
       },
     });
-    console.log(club.id);
 
     return NextResponse.json(club);
   } catch (error) {
