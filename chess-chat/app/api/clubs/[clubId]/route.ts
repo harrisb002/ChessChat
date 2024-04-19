@@ -38,7 +38,42 @@ export async function PATCH(
 
     return NextResponse.json(club);
   } catch (error) {
-    console.log("[CLUB_ID_PATCH", error);
+    console.log("[CLUB_ID_DELETE", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  {
+    params,
+  }: {
+    params: {
+      clubId: string;
+    };
+  }
+) {
+  try {
+    const profile = await currentProfile();
+    if (!profile) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!params.clubId) {
+      return new NextResponse("Club Id Missing", { status: 400 });
+    }
+
+    // Update the club
+    const club = await db.club.delete({
+      where: {
+        id: params.clubId,
+        profileId: profile.id,
+      },
+    });
+
+    return NextResponse.json(club);
+  } catch (error) {
+    console.log("[CLUB_ID_DELETE", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
