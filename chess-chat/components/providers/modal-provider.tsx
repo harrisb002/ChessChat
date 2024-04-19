@@ -5,7 +5,8 @@ import { CreateClubModal } from "@/components/modals/create-club-modal";
 import { InviteModal } from "@/components/modals/invite-modal";
 import { EditClubModal } from "@/components/modals/edit-club-modal";
 import { MembersModal } from "@/components/modals/members-modal";
-import { CreateChannelModal } from "../modals/create-channel-modal";
+import { CreateChannelModal } from "@/components/modals/create-channel-modal";
+import { LeaveClubModal } from "@/components/modals/leave-club-modal";
 
 export const ModalProvider = () => {
   // Prevent modals being rendered on serverside, gets rid of hydration errors
@@ -25,6 +26,7 @@ export const ModalProvider = () => {
       <EditClubModal />
       <MembersModal />
       <CreateChannelModal />
+      <LeaveClubModal />
     </>
   );
 };
