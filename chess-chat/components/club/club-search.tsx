@@ -10,6 +10,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { CommandItem } from "cmdk";
+import { useParams, useRouter } from "next/navigation";
 
 interface ClubSearchProps {
   data: {
@@ -28,6 +29,9 @@ interface ClubSearchProps {
 export const ClubSearch = ({ data }: ClubSearchProps) => {
   const [open, setOpen] = useState(false);
 
+  const router = useRouter();
+  const params = useParams();
+
   useEffect(() => {
     // Watching for the key "k" and the metakey or control key for "command k" functionallity for searching
     const down = (e: KeyboardEvent) => {
@@ -43,7 +47,20 @@ export const ClubSearch = ({ data }: ClubSearchProps) => {
     document.addEventListener("keydown", down);
     // Return listener to prevent overflow
     return () => document.removeEventListener("keydown", down)
-  }, [])
+  }, []);
+
+
+  const onClick = ({id, type}: { id: string, type: "channel" | "member"}) => {
+    setOpen(false);
+
+    if(type === "member" ) {
+      return router.push(`/clubs/${params?.clubId}/conversations/${id}`)
+    }
+    if(type === "channel" ) {
+      return router.push(`/clubs/${params?.clubId}/channels/${id}`)
+    }
+    
+  }
 
   return (
     <>
@@ -76,7 +93,7 @@ export const ClubSearch = ({ data }: ClubSearchProps) => {
                     >
                       <div className="flex items-center">
                         <i className="text-rose-200">{icon}</i>
-                        <span className="ml-2 text-lg text-teal-500">{name}</span>
+                        <span className="hover:cursor-pointer ml-2 text-lg text-teal-500">{name}</span>
                       </div>
                     </CommandItem>
                   );
