@@ -8,6 +8,7 @@ import { MembersModal } from "@/components/modals/members-modal";
 import { CreateChannelModal } from "@/components/modals/create-channel-modal";
 import { LeaveClubModal } from "@/components/modals/leave-club-modal";
 import { DeleteClubModal } from "@/components/modals/delete-club-modal";
+import { DeleteChannelModal } from "@/components/modals/delete-channel-modal.tsx";
 
 export const ModalProvider = () => {
   // Prevent modals being rendered on serverside, gets rid of hydration errors
@@ -29,6 +30,7 @@ export const ModalProvider = () => {
       <CreateChannelModal />
       <LeaveClubModal />
       <DeleteClubModal />
+      <DeleteChannelModal />
     </>
   );
 };

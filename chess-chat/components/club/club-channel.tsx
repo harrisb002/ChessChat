@@ -5,6 +5,7 @@ import { Channel, ChannelType, Club, MemberRole } from "@prisma/client";
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { ActionTooltip } from "@/components/action-tooltip";
+import { useModal } from "@/hooks/use-modal-store";
 
 interface ClubChannelProps {
   channel: Channel;
@@ -21,6 +22,7 @@ const iconMap = {
 export const ClubChannel = ({ channel, club, role }: ClubChannelProps) => {
   const params = useParams();
   const router = useRouter();
+  const { onOpen } = useModal();
 
   // This will be rendered as a component
   const Icon = iconMap[channel.type];
@@ -46,7 +48,7 @@ export const ClubChannel = ({ channel, club, role }: ClubChannelProps) => {
                 <Edit className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
             </ActionTooltip>
             <ActionTooltip label="Delete" side={"top"} align={"end"}>
-                <Trash className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
+                <Trash onClick={() => onOpen("deleteChannel", {club, channel})} className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
             </ActionTooltip>
         </div>
     )} 
