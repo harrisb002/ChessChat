@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -27,6 +27,23 @@ interface ClubSearchProps {
 
 export const ClubSearch = ({ data }: ClubSearchProps) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    // Watching for the key "k" and the metakey or control key for "command k" functionallity for searching
+    const down = (e: KeyboardEvent) => {
+      if( e.key === "k" && (e.metaKey || e.ctrlKey))
+        {
+          e.preventDefault();
+          // Use manual open
+          setOpen((open) => !open);
+        }
+    }
+
+    // Add the listener to the document
+    document.addEventListener("keydown", down);
+    // Return listener to prevent overflow
+    return () => document.removeEventListener("keydown", down)
+  }, [])
 
   return (
     <>
@@ -57,8 +74,10 @@ export const ClubSearch = ({ data }: ClubSearchProps) => {
                       key={id}
                       onSelect={() => onClick({ id, type })}
                     >
-                      {icon}
-                      <span>{name}</span>
+                      <div className="flex items-center">
+                        <i className="text-rose-200">{icon}</i>
+                        <span className="ml-2 text-lg text-teal-500">{name}</span>
+                      </div>
                     </CommandItem>
                   );
                 })}
