@@ -2,13 +2,13 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { ClubHeader } from "./club-header";
-import { ChannelType, MemberRole } from "@prisma/client";
-import { channel } from "diagnostics_channel";
+import { ChannelType, MemberRole, Channel} from "@prisma/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClubSearch } from "./club-search";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ClubSection } from "./club-section";
+import { ClubChannel } from "./club-channel";
 
 interface ClubSidebarProps {
   clubId: string;
@@ -136,6 +136,14 @@ export const ClubSidebar = async ({ clubId }: ClubSidebarProps) => {
             role={role}
             label="Text Channels"
             />
+            {textChannels.map((channel) => (
+              <ClubChannel 
+              key={channel.id}
+              channel={channel}
+              role={role}
+              club={club}
+              />
+            ))}
           </div>
         )} 
       </ScrollArea>
