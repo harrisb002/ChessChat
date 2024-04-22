@@ -1,6 +1,6 @@
 "use client";
 import * as z from "zod";
-import axios from "axios"
+import axios from "axios";
 import qs from "query-string";
 import { useForm } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
@@ -34,36 +34,50 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
+  SelectValue,
+} from "@/components/ui/select";
+import { useEffect } from "react";
 
 const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Channel name is required.",
-  }).refine(  // Cannot use general as the Channel name
-    name => name !== "general",
-    {
-      message: "Channel name cannot be 'general'"
-    }
-  ),
-  type: z.nativeEnum(ChannelType)
+  name: z
+    .string()
+    .min(1, {
+      message: "Channel name is required.",
+    })
+    .refine(
+      // Cannot use general as the Channel name
+      (name) => name !== "general",
+      {
+        message: "Channel name cannot be 'general'",
+      }
+    ),
+  type: z.nativeEnum(ChannelType),
 });
 
 export const CreateChannelModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
   const params = useParams();
 
   const isModalOpen = isOpen && type === "createChannel";
+  const { channelType } = data;
 
   // Resolve form submition using formschema
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   });
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType); // Set the channel type to if defined
+    } else {
+      form.setValue("type", ChannelType.TEXT); // default
+    }
+  }, [channelType, form]);
 
   // Extract the loading state
   const isLoading = form.formState.isSubmitting;
@@ -73,9 +87,9 @@ export const CreateChannelModal = () => {
       const url = qs.stringifyUrl({
         url: "/api/channels",
         query: {
-          clubId: params?.clubId
-        }
-      })
+          clubId: params?.clubId,
+        },
+      });
       // Use the queried url with data
       await axios.post(url, values);
 
@@ -90,14 +104,14 @@ export const CreateChannelModal = () => {
   const handleClose = () => {
     form.reset();
     onClose();
-  }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create Channel
+            Create {channelType && ( channelType?.toLowerCase())} channel
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -135,9 +149,7 @@ export const CreateChannelModal = () => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger
-                          className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none"
-                        >
+                        <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
                           <SelectValue placeholder="Select a channel type" />
                         </SelectTrigger>
                       </FormControl>
@@ -165,7 +177,6 @@ export const CreateChannelModal = () => {
             </DialogFooter>
           </form>
         </Form>
-
       </DialogContent>
     </Dialog>
   );

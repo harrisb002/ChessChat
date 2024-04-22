@@ -2,13 +2,14 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { ClubHeader } from "./club-header";
-import { ChannelType, MemberRole, Channel} from "@prisma/client";
+import { ChannelType, MemberRole, Channel } from "@prisma/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClubSearch } from "./club-search";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ClubSection } from "./club-section";
 import { ClubChannel } from "./club-channel";
+import { ClubMember } from "./club-member";
 
 interface ClubSidebarProps {
   clubId: string;
@@ -127,25 +128,83 @@ export const ClubSidebar = async ({ clubId }: ClubSidebarProps) => {
             ]}
           />
         </div>
-        <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2"/>
+        <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {!!textChannels?.length && (
           <div className="mb-2">
             <ClubSection
-            sectionType="channels"
-            channelType={ChannelType.TEXT}
-            role={role}
-            label="Text Channels"
-            />
-            {textChannels.map((channel) => (
-              <ClubChannel 
-              key={channel.id}
-              channel={channel}
+              sectionType="channels"
+              channelType={ChannelType.TEXT}
               role={role}
-              club={club}
-              />
-            ))}
+              label="Text Channels"
+            />
+            <div className="space-y-[2px]">
+              {textChannels.map((channel) => (
+                <ClubChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                  club={club}
+                />
+              ))}
+            </div>
           </div>
-        )} 
+        )}
+        {!!audioChannels?.length && (
+          <div className="mb-2">
+            <ClubSection
+              sectionType="channels"
+              channelType={ChannelType.AUDIO}
+              role={role}
+              label="Voice Channels"
+            />
+            <div className="space-y-[2px]">
+              {audioChannels.map((channel) => (
+                <ClubChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                  club={club}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {!!videoChannels?.length && (
+          <div className="mb-2">
+            <ClubSection
+              sectionType="channels"
+              channelType={ChannelType.VIDEO}
+              role={role}
+              label="Video Channels"
+            />
+            <div className="space-y-[2px]">
+              {videoChannels.map((channel) => (
+                <ClubChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                  club={club}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!!members?.length && (
+          <div className="mb-2">
+            <ClubSection
+              sectionType="members"
+              role={role}
+              label="Members"
+              club={club}
+            />
+            <div className="space-y-[2px]">
+              {members.map((member) => (
+                <ClubMember key={member.id} member={member} club={club} />
+              ))}
+            </div>
+          </div>
+        )}
       </ScrollArea>
     </div>
   );
