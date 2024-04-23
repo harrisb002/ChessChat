@@ -92,8 +92,8 @@ export const ClubSearch = ({ data }: ClubSearchProps) => {
                       onSelect={() => onClick({ id, type })}
                     >
                       <div className="flex items-center">
-                        <i className="text-rose-200">{icon}</i>
-                        <span className="hover:cursor-pointer ml-2 text-lg text-teal-500">{name}</span>
+                        <i className="text-rose-500">{icon}</i>
+                        <span className="hover:cursor-pointer ml-2 text-lg text-teal-600">{name}</span>
                       </div>
                     </CommandItem>
                   );

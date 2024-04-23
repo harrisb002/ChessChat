@@ -14,14 +14,14 @@ datasource db {
 }
 
 model Profile {
-  id String @id @default(uuid())
-  userId String @unique
-  name String
+  id       String @id @default(uuid())
+  userId   String @unique
+  name     String
   imageUrl String @db.Text
-  email String @db.Text
+  email    String @db.Text
 
-  clubss Club[]
-  members Member[]
+  clubs    Club[]
+  members  Member[]
   channels Channel[]
 
   createdAt DateTime @default(now())
@@ -35,32 +35,31 @@ enum MemberRole {
 }
 
 model Member {
-  id String @id @default(uuid())
+  id   String     @id @default(uuid())
   role MemberRole @default(GUEST)
 
   profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  clubsId String
-  clubs Club @relation(fields: [clubsId], references: [id], onDelete: Cascade)
+  clubId String
+  clubs  Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([clubsId])
+  @@index([clubId])
 }
 
-
 model Club {
-  id String @id @default(uuid())
-  name String
-  imageUrl String @db.Text
-  inviteCode String @unique
-  profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id         String  @id @default(uuid())
+  name       String
+  imageUrl   String  @db.Text
+  inviteCode String  @unique
+  profileId  String
+  profile    Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  members Member[]
+  members  Member[]
   channels Channel[]
 
   createdAt DateTime @default(now())
@@ -76,17 +75,17 @@ enum ChannelType {
 }
 
 model Channel {
-  id String @id @default(uuid())
-  name String
-  type ChannelType @default(TEXT)
+  id        String      @id @default(uuid())
+  name      String
+  type      ChannelType @default(TEXT)
   profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  clubsId String
-  clubs Club @relation(fields: [clubsId], references: [id], onDelete: Cascade)
+  profile   Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  clubId    String
+  clubs     Club        @relation(fields: [clubId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([clubsId])
+  @@index([clubId])
 }
