@@ -56,6 +56,74 @@ export async function DELETE(
         console.log("[CHANNEL_ID_DELETE",error);
         return new NextResponse("Internal Error ", {status: 500});
     }
+}
+
+
+export async function PATCH(
+    req: Request,
+    {params}: {params: {channelId: string}}
+) {
+    try {
+        const profile = await currentProfile();
+
+        // Get clubId from search parameters
+        const {searchParams} = new URL(req.url);
+        const { name, type } = await req.json();
+
+        const clubId = searchParams.get("clubId");
+
+        if(!profile) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
+        
+        if(!clubId) {
+            return new NextResponse("Club ID missing", {status: 400});
+        }
+
+        if(!params.channelId) {
+            return new NextResponse("Channel ID missing", {status: 400});
+        }
+
+        if(name === "general") {
+            return new NextResponse("Name cannot be 'general'", {status: 400});
+        }
+
+        const club = await db.club.update({
+            where: {
+                id: clubId,
+                members: {
+                    some: {
+                        profileId: profile.id,
+                        role: {
+                            in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+                        }
+                    }
+                }
+            },
+            data: {
+               channels: {
+                update: {
+                    where: {
+                        id: params.channelId,
+                        NOT: {
+                            name: "general",
+                        },
+                    },
+                    data: {
+                        name,
+                        type,
+                    }
+                }
+               }
+            }
+        })
+
+        return NextResponse.json(club);
+
+    } catch (error) {
+        console.log("[CHANNEL_ID_PATCH",error);
+        return new NextResponse("Internal Error ", {status: 500});
+    }
 
 
 }

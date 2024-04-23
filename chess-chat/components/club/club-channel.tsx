@@ -45,7 +45,7 @@ export const ClubChannel = ({ channel, club, role }: ClubChannelProps) => {
     {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="ml-auto flex items-center gap-x-2">
             <ActionTooltip label="Edit" side={"top"} align={"end"}>
-                <Edit className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
+                <Edit onClick={() => onOpen("editChannel", {club, channel})}  className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
             </ActionTooltip>
             <ActionTooltip label="Delete" side={"top"} align={"end"}>
                 <Trash onClick={() => onOpen("deleteChannel", {club, channel})} className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-400 dark:hovertext-zinc-300 transsition"/>
