@@ -28,8 +28,8 @@ export const DeleteClubModal = () => {
       await axios.delete(`/api/clubs/${club?.id}`);
 
       onClose();
-      router.refresh();
       router.push("/");
+      router.refresh();
     } catch (error) {
       console.log(error);
     } finally {
@@ -50,7 +50,9 @@ export const DeleteClubModal = () => {
           <DialogDescription className="text-center text-zinc-500">
             Please confirm you wish to delete{" "}
             <span className="font-bold text-indigo-500"> {club?.name}</span>
-            <div className="font-semibold text-rose-500">This action is permanent</div>
+            <div className="font-semibold text-rose-500">
+              This action is permanent
+            </div>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
