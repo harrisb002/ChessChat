@@ -7,7 +7,7 @@ import { useState } from "react";
 import { MemberRole } from "@prisma/client";
 
 import axios from "axios";
-import qs from "query-string"
+import qs from "query-string";
 
 import {
   Check,
@@ -17,8 +17,7 @@ import {
   Shield,
   ShieldAlert,
   ShieldCheck,
-  ShieldQuestion
-
+  ShieldQuestion,
 } from "lucide-react";
 
 import {
@@ -30,8 +29,8 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuTrigger,
-  DropdownMenuSubTrigger
-} from "@/components/ui/dropdown-menu"
+  DropdownMenuSubTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Dialog,
@@ -43,21 +42,21 @@ import {
 import { useRouter } from "next/navigation";
 
 const roleIconMap = {
-  "GUEST": null,
-  "MODERATOR": <ShieldAlert className="h-4 w-4 ml-2 text-indigo-500" />,
-  "ADMIN": <ShieldCheck className="h-4 w-4 text-green-600" />
-}
+  GUEST: null,
+  MODERATOR: <ShieldAlert className="h-4 w-4 ml-2 text-indigo-500" />,
+  ADMIN: <ShieldCheck className="h-4 w-4 text-green-600" />,
+};
 
 export const MembersModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
-  const [loadingId, setLoadingId] = useState((""));
+  const [loadingId, setLoadingId] = useState("");
 
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "members";
 
   // Extract the data from the club and members from object defined in types
-  const { club } = data as { club: ClubWithMembersWithProfiles }
+  const { club } = data as { club: ClubWithMembersWithProfiles };
 
   const onKick = async (memberId: string) => {
     try {
@@ -73,36 +72,33 @@ export const MembersModal = () => {
 
       router.refresh();
       onOpen("members", { club: response.data });
-
-    } catch (error) {
-      console.log(error)
-
-    } finally {
-      setLoadingId("");
-    }
-  }
-
-  const onRoleChange = async (memberId: string, role: MemberRole) => {
-    try {
-      setLoadingId(memberId)
-      const url = qs.stringifyUrl({
-        url: `/api/members/${memberId}`,
-        query: {
-          serverId: club?.id,
-          memberId
-        }
-      })
-
-      const response = await axios.patch(url, { role })
-      router.refresh();
-      onOpen("members", { club: response.data }) // Update the data
-
     } catch (error) {
       console.log(error);
     } finally {
       setLoadingId("");
     }
-  }
+  };
+
+  const onRoleChange = async (memberId: string, role: MemberRole) => {
+    try {
+      setLoadingId(memberId);
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          clubId: club?.id,
+          memberId,
+        },
+      });
+
+      const response = await axios.patch(url, { role });
+      router.refresh();
+      onOpen("members", { club: response.data }); // Update the data
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingId("");
+    }
+  };
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black overflow-hidden">
@@ -111,10 +107,10 @@ export const MembersModal = () => {
             Manage Members
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            {club?.members?.length} 
+            {club?.members?.length}
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="mt-8 max-h-[420px] pr-6" >
+        <ScrollArea className="mt-8 max-h-[420px] pr-6">
           {club?.members?.map((member) => (
             <div key={member.id} className="flex items-center gap-x-2 mb-6">
               <UserAvatar src={member.profile.imageUrl} />
@@ -123,9 +119,7 @@ export const MembersModal = () => {
                   {member.profile.name}
                   {roleIconMap[member.role]}
                 </div>
-                <p className="text-xs text-zinc-500">
-                  {member.profile.email}
-                </p>
+                <p className="text-xs text-zinc-500">{member.profile.email}</p>
               </div>
               {/* club.profileId !== member.profile.id && */}
               {loadingId !== member.id && (
@@ -142,22 +136,24 @@ export const MembersModal = () => {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                           <DropdownMenuSubContent>
-                            <DropdownMenuItem onClick={() => onRoleChange(member.id, "GUEST")}>
+                            <DropdownMenuItem
+                              onClick={() => onRoleChange(member.id, "GUEST")}
+                            >
                               <Shield className="h-4 w-4 mr-2" />
                               Guest
                               {member.role === "GUEST" && (
-                                <Check
-                                  className="h-4 w-4 ml-auto"
-                                />
+                                <Check className="h-4 w-4 ml-auto" />
                               )}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onRoleChange(member.id, "MODERATOR")}>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                onRoleChange(member.id, "MODERATOR")
+                              }
+                            >
                               <Shield className="h-4 w-4 mr-2" />
                               Moderator
                               {member.role === "MODERATOR" && (
-                                <Check
-                                  className="h-4 w-4 ml-auto"
-                                />
+                                <Check className="h-4 w-4 ml-auto" />
                               )}
                             </DropdownMenuItem>
                           </DropdownMenuSubContent>

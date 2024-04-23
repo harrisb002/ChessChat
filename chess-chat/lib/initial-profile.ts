@@ -16,7 +16,7 @@ export const initialProfile = async () => {
     });
 
     if(profile) {
-        return profile
+        return profile;
     }
 
     // Create a new profile if one not found

@@ -88,8 +88,9 @@ export const EditChannelModal = () => {
           clubId: club?.id,
         },
       });
+      
       // Use the queried url with data
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       form.reset();
       router.refresh();
