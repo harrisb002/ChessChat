@@ -1,6 +1,7 @@
 import { Hash } from "lucide-react";
 import { MobileToggle } from "@/components/mobile-toggle";
 import { UserAvatar } from "@/components/user-avatar";
+import { SocketIndicator } from "../socket-indicator";
 
 interface ChatHeaderProps {
   clubId: string;
@@ -30,6 +31,9 @@ export const ChatHeader = ({
       <p className="font-semibold tex-md text-black dark:text-teal-500">
         {name}
       </p>
+      <div className="ml-auto flex items-center">
+        <SocketIndicator />
+      </div>
     </div>
   );
 };
