@@ -77,7 +77,7 @@ export default async function handler(
         member: {
           include: {
             profile: true,
-          },
+          }, 
         },
       },
     });

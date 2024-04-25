@@ -4,7 +4,7 @@ import axios from "axios";
 import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import qs from "query-string"
+import qs from "query-string";
 
 import {
   Dialog,
@@ -31,15 +31,14 @@ export const DeleteChannelModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/channels/${channel?.id}`,
         query: {
-          clubId: club?.id
-        }
-
-      })
+          clubId: club?.id,
+        },
+      });
       await axios.delete(url);
 
-      onClose();
-      router.refresh();
       router.push(`/clubs/${club?.id}`);
+      router.refresh();
+      onClose();
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,7 +56,9 @@ export const DeleteChannelModal = () => {
           <DialogDescription className="text-center text-zinc-500">
             Please confirm you wish to delete{" "}
             <span className="font-bold text-indigo-500"> #{channel?.name}</span>
-            <div className="font-semibold text-rose-500">This action is permanent</div>
+            <div className="font-semibold text-rose-500">
+              This action is permanent
+            </div>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
