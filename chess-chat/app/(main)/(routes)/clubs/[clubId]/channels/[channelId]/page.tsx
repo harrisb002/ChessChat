@@ -1,5 +1,6 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
+import { ChatMessages } from "@/components/chat/chat-messages";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirectToSignIn } from "@clerk/nextjs";
@@ -45,8 +46,28 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
         name={channel.name}
         type={"channel"}
       />
-      <div className="flex-1">Future Messages</div>
-      <ChatInput apiUrl="/api/socket/messages" query={{channelId: channel.id, clubId: channel.clubId}} name={channel.name} type={"channel"} />
+      {/* apiUrl is where the messages will be fetched from. socketUrl is where new messages will be triggered */}
+      <ChatMessages
+        member={member}
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/messages"
+        socketUrl="/api/socket/messages"
+        socketQuery={{
+          channelId: channel.id,
+          clubId: channel.clubId,
+        }}
+        chatId={channel.id}
+        paramKey="channelId"
+        paramValue={channel.id}
+      />
+
+      <ChatInput
+        apiUrl="/api/socket/messages"
+        query={{ channelId: channel.id, clubId: channel.clubId }}
+        name={channel.name}
+        type={"channel"}
+      />
     </div>
   );
 };
