@@ -1,6 +1,7 @@
 "use client";
 
 import { Member } from "@prisma/client";
+import { ChatWelcome } from "./chat-welcome";
 
 // USed as modular props to be used both for one-one convos as well as channel convos
 interface ChatMessagesProps {
@@ -28,5 +29,10 @@ export const ChatMessages = ({
   paramKey,
   paramValue,
 }: ChatMessagesProps) => {
-  return <div>Chat Messages</div>;
+  return (
+    <div className="flex-1 flex flex-col py-4 overflow-y-auto">
+      <div className="flex-1" />
+      <ChatWelcome type={type} name={name} />
+    </div>
+  );
 };
