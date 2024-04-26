@@ -21,21 +21,21 @@ export const useChatQuery = ({
   const { isConnected } = useSocket();
 
   // Use QueryFunctionContext to use custom queryFn to call REFS: https://tanstack.com/query/latest/docs/framework/react/guides/query-functions#queryfunctioncontext
-  const fetchMessages = async (context: QueryFunctionContext) => {
+  const fetchMessages = async ({ pageParam }: QueryFunctionContext) => {
     // pageParam will act as the cursor to allow for infinite loading
-    const { pageParam } = context; // Extracting pageParam from the context
 
-    const url = qs.stringify(
+    const url = qs.stringifyUrl(
       {
-        api: apiUrl,
+        url: apiUrl,
         query: {
-          cursor: pageParam,
+          cursor: String(pageParam),
           [paramKey]: paramValue,
         },
       },
       { skipNull: true }
     );
     const res = await fetch(url);
+    console.log("The response from fetch messages is", res);
     return res.json();
   };
 
@@ -43,13 +43,16 @@ export const useChatQuery = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: [queryKey],
-      queryFn: fetchMessages, // Function to call to request data
+      queryFn: (pageParam) => fetchMessages(pageParam), // Function to call to request data
       initialPageParam: 1,
       getNextPageParam: (lastPage) => lastPage?.nextCursor, // Incase the API fails then use to reshresh
       refetchInterval: isConnected ? false : 1000, // Can rely on this if websockets not available
     });
 
-  return {
+    console.log("data: ", data);
+
+    
+    return {
     data,
     fetchNextPage,
     hasNextPage,

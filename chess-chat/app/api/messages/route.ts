@@ -4,7 +4,7 @@ import { Message } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 // Fetching 20 X 20 messages for batches
-const MESSAGES_BATCH = 20;
+const MESSAGES_BATCH = 10;
 
 export async function GET(req: Request) {
   try {
@@ -50,10 +50,8 @@ export async function GET(req: Request) {
           createdAt: "desc", // Reverse messages
         },
       });
-    }
-
-    // If we dont have a cursor
-    else {
+    } else {
+      //if no cursor
       messages = await db.message.findMany({
         take: MESSAGES_BATCH,
         where: {
@@ -79,6 +77,8 @@ export async function GET(req: Request) {
     if (messages.length === MESSAGES_BATCH) {
       nextCusor = messages[MESSAGES_BATCH - 1].id;
     }
+    console.log("Messages are", messages);
+    console.log("Next Cursor is", nextCusor);
 
     // Give the data back
     return NextResponse.json({
