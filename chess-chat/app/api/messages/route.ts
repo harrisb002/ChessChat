@@ -16,6 +16,9 @@ export async function GET(req: Request) {
     const cursor = searchParams.get("cursor");
     const channelId = searchParams.get("channelId");
 
+    console.log("ChannelId is: ", channelId)
+    console.log("Cursor is: ", cursor)
+
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -49,13 +52,13 @@ export async function GET(req: Request) {
         orderBy: {
           createdAt: "desc", // Reverse messages
         },
-      });
+      })
     } else {
       //if no cursor
       messages = await db.message.findMany({
         take: MESSAGES_BATCH,
         where: {
-          channelId,
+          channelId
         },
         include: {
           member: {
@@ -79,7 +82,7 @@ export async function GET(req: Request) {
     }
     console.log("Messages are", messages);
     console.log("Next Cursor is", nextCusor);
-
+ 
     // Give the data back
     return NextResponse.json({
       items: messages,

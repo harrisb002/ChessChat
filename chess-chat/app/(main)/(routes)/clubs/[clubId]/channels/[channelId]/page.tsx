@@ -41,15 +41,12 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 
   return (
     <div className="bg-white dark:bg-[#2a2a33] flex flex-col h-full">
-      <ChatHeader
-        clubId={channel.clubId}
-        name={channel.name}
-        type={"channel"}
-      />
+      <ChatHeader clubId={channel.clubId} name={channel.name} type="channel" />
       {/* apiUrl is where the messages will be fetched from. socketUrl is where new messages will be triggered */}
       <ChatMessages
         member={member}
         name={channel.name}
+        chatId={channel.id}
         type="channel"
         apiUrl="/api/messages"
         socketUrl="/api/socket/messages"
@@ -57,7 +54,6 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
           channelId: channel.id,
           clubId: channel.clubId,
         }}
-        chatId={channel.id}
         paramKey="channelId"
         paramValue={channel.id}
       />
@@ -66,7 +62,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
         apiUrl="/api/socket/messages"
         query={{ channelId: channel.id, clubId: channel.clubId }}
         name={channel.name}
-        type={"channel"}
+        type="channel"
       />
     </div>
   );

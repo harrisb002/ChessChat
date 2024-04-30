@@ -19,25 +19,23 @@ interface ChatMessagesProps {
   member: Member;
   chatId: string;
   apiUrl: string;
-  type: "channel" | "conversation";
-
   socketUrl: string;
   socketQuery: Record<string, string>;
-
   paramKey: "channelId" | "conversationId";
   paramValue: string;
+  type: "channel" | "conversation";
 }
 
 export const ChatMessages = ({
-  member,
   name,
+  member,
   chatId,
   apiUrl,
-  type,
   socketUrl,
   socketQuery,
   paramKey,
   paramValue,
+  type,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`;
 
@@ -69,7 +67,6 @@ export const ChatMessages = ({
     );
   }
 
-  console.log(" is", data);
 
   return (
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">
