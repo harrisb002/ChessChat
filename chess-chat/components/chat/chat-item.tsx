@@ -3,7 +3,10 @@
 import { Member, MemberRole, Profile } from "@prisma/client";
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionTooltip } from "@/components/action-tooltip";
-import { ShieldAlert, ShieldCheck } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ChatItemProps {
   id: string;
@@ -38,8 +41,10 @@ export const ChatItem = ({
   socketUrl,
   socketQuery,
 }: ChatItemProps) => {
-  const fileType = fileUrl?.split(".").pop();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  const fileType = fileUrl?.split(".").pop();
   const isAdmin = currentMember.role === MemberRole.ADMIN;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
   const isOwner = currentMember.id === member.id;
@@ -51,8 +56,11 @@ export const ChatItem = ({
   return (
     <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
       <div className="group flex gap-x-2 items-start w-full">
-        <div className="cursor-pointer hover:drop-shadow-md transition">
-          <UserAvatar src={member.profile.imageUrl} />
+        <div className="cursor-pointer hover:drop-shadow-md transition ">
+          <UserAvatar
+            src={member.profile.imageUrl}
+            className="h-7 w-7 md:h-8 md:w-8"
+          />
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
@@ -68,9 +76,64 @@ export const ChatItem = ({
               {timestamp}
             </span>
           </div>
-          {content}
+          {isImage && (
+            <a
+              href={fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-24 w-24"
+            >
+              <Image
+                src={fileUrl}
+                alt={content}
+                fill
+                className="object-cover"
+              />
+            </a>
+          )}
+          {isPDF && (
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+              <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hl-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+              >
+                PDF File
+              </a>
+            </div>
+          )}
+          {!fileUrl && !isEditing && (
+            <p
+              className={cn(
+                "text-sm text-zinc-600 dark:text-zinc-300",
+                deleted &&
+                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+              )}
+            >
+              {content}
+              {isUpdated && !deleted && (
+                <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                  (edited)
+                </span>
+              )}
+            </p>
+          )}
         </div>
       </div>
+      {canDeleteMessage && (
+        <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-900 border rounder-sm">
+          {canEditMessage && (
+            <ActionTooltip label="Edit" side={"top"} align={"end"}>
+              <Edit className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition" />
+            </ActionTooltip>
+          )}
+          <ActionTooltip label="Delete" side={"top"} align={"end"}>
+            <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition" />
+          </ActionTooltip>
+        </div>
+      )}
     </div>
   );
 };
