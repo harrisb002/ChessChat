@@ -16,7 +16,6 @@ export async function GET(req: Request) {
     const cursor = searchParams.get("cursor");
     const channelId = searchParams.get("channelId");
 
-    console.log("ChannelId is: ", channelId)
     console.log("Cursor is: ", cursor)
 
     if (!profile) {
@@ -80,8 +79,7 @@ export async function GET(req: Request) {
     if (messages.length === MESSAGES_BATCH) {
       nextCusor = messages[MESSAGES_BATCH - 1].id;
     }
-    console.log("Messages are", messages);
-    console.log("Next Cursor is", nextCusor);
+
  
     // Give the data back
     return NextResponse.json({
