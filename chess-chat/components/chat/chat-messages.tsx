@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { ChatItem } from "./chat-item";
 import { ChatWelcome } from "./chat-welcome";
 import { format } from "date-fns";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FOMAT = "d MMM yyyy, HH:mm";
 
@@ -50,6 +51,8 @@ export const ChatMessages = ({
       paramKey,
       paramValue,
     });
+
+    useChatSocket
 
   if (status === "pending") {
     return (
