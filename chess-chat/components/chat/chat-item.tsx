@@ -1,12 +1,21 @@
 "use client";
+import * as z from "zod";
+import axios from "axios";
+import qs from "query-string";
+import { cn } from "@/lib/utils";
 
 import { Member, MemberRole, Profile } from "@prisma/client";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionTooltip } from "@/components/action-tooltip";
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ChatItemProps {
   id: string;
@@ -29,6 +38,10 @@ const roleIconMap = {
   ADMIN: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
 };
 
+const formSchema = z.object({
+  content: z.string().min(1),
+});
+
 export const ChatItem = ({
   id,
   content,
@@ -43,6 +56,23 @@ export const ChatItem = ({
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: content,
+    },
+  });
+
+  const onSubmit = (values) => {
+    console.log(values);
+  }
+
+  useEffect(() => {
+    form.reset({
+      content: content,
+    });
+  }, [content]);
 
   const fileType = fileUrl?.split(".").pop();
   const isAdmin = currentMember.role === MemberRole.ADMIN;
@@ -120,13 +150,22 @@ export const ChatItem = ({
               )}
             </p>
           )}
+          {!fileUrl && isEditing && (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+              </form>
+            </Form>
+          )}
         </div>
       </div>
       {canDeleteMessage && (
         <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-900 border rounder-sm">
           {canEditMessage && (
             <ActionTooltip label="Edit" side={"top"} align={"end"}>
-              <Edit className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition" />
+              <Edit
+                onClick={() => setIsEditing(true)}
+                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition"
+              />
             </ActionTooltip>
           )}
           <ActionTooltip label="Delete" side={"top"} align={"end"}>
