@@ -45,7 +45,7 @@ export const useChatQuery = ({
       queryFn: ({ pageParam }) => fetchMessages(pageParam),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => lastPage?.nextCursor, // Incase the API fails then use to reshresh
-      refetchInterval: isConnected ? false : 1000, // Can rely on this if websockets not available
+      refetchInterval: 1000, // Can rely on this if websockets not available
     });
   return {
     data,

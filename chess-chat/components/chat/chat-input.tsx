@@ -13,6 +13,7 @@ import { Plus } from "lucide-react";
 import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "@/components/emoji-picker";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface ChatInputProps {
   apiUrl: string;
@@ -26,6 +27,8 @@ const formSchema = z.object({
 });
 
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { onOpen } = useModal();
   const router = useRouter();
 
@@ -36,10 +39,10 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
     },
   });
 
-  const isLoading = form.formState.isSubmitted;
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsLoading(true); // Set loading to true when form is submitted
+
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
@@ -51,6 +54,8 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -77,13 +82,15 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                     placeholder={`Message ${
                       type === "conversation" ? name : "#" + name
                     }`}
-                    // Spread the field in the input 
+                    // Spread the field in the input
                     {...field}
                   />
                   <div className="absolute top-7 right-8">
-                    <EmojiPicker 
-                    // Get the current value and append the emoji on it once clicked
-                    onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
+                    <EmojiPicker
+                      // Get the current value and append the emoji on it once clicked
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value} ${emoji}`)
+                      }
                     />
                   </div>
                 </div>
