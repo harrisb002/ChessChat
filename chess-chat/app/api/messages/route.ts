@@ -16,8 +16,6 @@ export async function GET(req: Request) {
     const cursor = searchParams.get("cursor");
     const channelId = searchParams.get("channelId");
 
-    console.log("Cursor is: ", cursor)
-
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -72,19 +70,19 @@ export async function GET(req: Request) {
       });
     }
 
-    let nextCusor = null;
+    let nextCursor = null;
 
     // Create the next cursor for the infinte load using the length of the messages
     // If messages.length < MESSAGES_BATCH then it has hit end for infinite load, ie no more messages
     if (messages.length === MESSAGES_BATCH) {
-      nextCusor = messages[MESSAGES_BATCH - 1].id;
+      nextCursor = messages[MESSAGES_BATCH - 1].id;
     }
 
  
     // Give the data back
     return NextResponse.json({
       items: messages,
-      nextCusor,
+      nextCursor,
     });
   } catch (error) {
     console.log("[MESSAGES_GET]", error);
