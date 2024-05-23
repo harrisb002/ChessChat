@@ -11,7 +11,8 @@ export type ModalType =
   | "deleteClub"
   | "deleteChannel"
   | "editChannel"
-  | "messageFile";
+  | "messageFile"
+  | "deleteMessage";
 
 interface ModalData {
   club?: Club;
