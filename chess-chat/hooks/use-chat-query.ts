@@ -42,10 +42,10 @@ export const useChatQuery = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: [queryKey],
-      queryFn: ({ pageParam }) => fetchMessages(pageParam),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => lastPage?.nextCursor, // Incase the API fails then use to reshresh
-      refetchInterval: 1000, // Can rely on this if websockets not available
+      queryFn: fetchMessages,
+      initialPageParam: undefined,
+      getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+      getPreviousPageParam: (firstPage) => firstPage?.prevCursor ?? undefined,
     });
   return {
     data,
