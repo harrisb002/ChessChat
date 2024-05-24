@@ -23,7 +23,7 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
 
     const name = `${user.firstName} ${user.lastName}`;
 
-    async () => {
+    (async () => {
       try {
         // Every channel will have its own chatId and useing it can create a uniwue room with it
         const response = await fetch(
@@ -34,7 +34,7 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
       } catch (error) {
         console.log(error);
       }
-    };
+    })();
   }, [user?.firstName, user?.lastName, chatId]);
 
   // Still fetching the token
@@ -48,12 +48,12 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
   }
   return (
     <LiveKitRoom
-    token={token}
-    data-lk-theme="default"
-    serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URLEXT}
-    connect={true}
-    video={video}
-    audio={audio}
+      token={token}
+      data-lk-theme="default"
+      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+      connect={true}
+      video={video}
+      audio={audio}
     >
       <VideoConference />
     </LiveKitRoom>
